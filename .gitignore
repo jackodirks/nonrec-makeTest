@@ -1,0 +1,83 @@
+#project-specific
+obj/
+doc/
+Doxydocs/
+final
+*.elf
+*.bin
+gmon.out
+
+#vim
+*.swp
+
+#ant specific
+dist/
+build/
+ 
+#netbeans specific
+core
+nbproject/*
+!nbproject/project.properties
+!nbproject/project.xml
+
+#general swap/backup files
+*.so
+*.log
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock
+
+# Eclipse project files
+*.pydevproject
+.metadata
+.gradle
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# C++ objects and libs
+*.slo
+*.lo
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+
+# Qt-es
+*.pro.user
+*.pro.user.*
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+*-build-*
+*.creator.user.*
+*.creator.user
+*.config
+*.creator
+*.files
+*.includes
+
+# QtCreator
+*.autosave
+
+
+gcc/
+ccs/
+openocdLog.txt
