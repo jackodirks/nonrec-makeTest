@@ -1,0 +1,1 @@
+int printHertogjan(void);
