@@ -4,6 +4,9 @@
 #include "sheep.h"
 #include "cow.h"
 #include "horse.h"
+#include "hertogjan.h"
+#include "desperados.h"
+#include "jupiler.h"
 
 int main(int argc, char** argv){
     printVw();
@@ -12,5 +15,8 @@ int main(int argc, char** argv){
     printSheep();
     printCow();
     printHorse();
+    printHertogjan();
+    printDesperados();
+    printJupiler();
     return 0;
 }

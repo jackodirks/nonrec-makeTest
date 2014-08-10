@@ -3,4 +3,5 @@
 
 int printSheep(void){
     printf("Sheep\n");
+    return 0;
 }

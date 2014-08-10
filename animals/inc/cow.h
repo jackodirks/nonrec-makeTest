@@ -1,1 +1,1 @@
-int cow(void);
+int printCow(void);

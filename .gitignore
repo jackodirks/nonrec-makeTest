@@ -81,3 +81,5 @@ ui_*.h
 gcc/
 ccs/
 openocdLog.txt
+debug/
+release/

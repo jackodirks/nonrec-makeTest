@@ -1,52 +1,72 @@
-SHELL := /bin/bash
-RUNDIR := $(CURDIR)
-ifndef TOP
-TOP := $(shell \
-       top=$(RUNDIR); \
-       while [ ! -r "$$top/Rules.top" ] && [ "$$top" != "" ]; do \
-           top=$${top%/*}; \
-       done; \
-       echo $$top)
-endif
+include mk/parsers.mk
+include mk/emptyvars.mk
+include mk/predefined.mk
+include mk/flags.mk
 
-MK := $(TOP)/mk
+TARGET := program
 
-.PHONY: dir tree all clean clean_all clean_tree dist_clean
+DEBUG_DIR := debug/
+RELEASE_DIR := release/
+OBJ_DIR := obj/
+DEBUG_OBJECTS_DIR := $(OBJ_DIR)$(DEBUG_DIR)
+RELEASE_OBJECTS_DIR := $(OBJ_DIR)$(RELEASE_DIR)
 
-# Default target when nothing is given on the command line.  Reasonable
-# options are:
-# "dir"  - updates only targets from current directory and its dependencies
-# "tree" - updates targets (and their dependencies) in whole subtree
-#          starting at current directory
-# "all"  - updates all targets in the project
-.DEFAULT_GOAL := dir
+RELEASETARGET := $(RELEASE_DIR)$(TARGET)
+DEBUGTARGET := $(DEBUG_DIR)$(TARGET)
+TARGETRECEIPE = $(CC) $(LDFLAGS) -o $@ $^ $(LIB)
 
-dir : dir_$(RUNDIR)
-tree : tree_$(RUNDIR)
+DEBUGDIRS += $(DEBUG_DIR)
+RELEASEDIRS += $(RELEASE_DIR)
 
-clean : clean_$(RUNDIR)
-clean_tree : clean_tree_$(RUNDIR)
+DIRS := $(shell ls -d */)
+DIRS := $(DIRS:=rules.mk)
+TOP := ./
 
-# $(d) keeps the path of "current" directory during tree traversal and
-# $(dir_stack) is used for backtracking during traversal
-d := $(TOP)
-dir_stack :=
+.PHONY: echo all debug prebuild
 
-include $(MK)/header.mk
-include $(MK)/footer.mk
+all: CFLAGS += -O2
+all: prebuild
+all: $(RELEASETARGET)
 
-# Automatic inclusion of the skel.mk at the top level - that way
-# Rules.top has exactly the same structure as other Rules.mk
-include $(MK)/skel.mk
+debug: CFLAGS += -DDEBUG -g
+debug: prebuild
+debug: $(DEBUGTARGET)
 
-.SECONDEXPANSION:
-$(eval $(value HEADER))
-include $(TOP)/Rules.top
-$(eval $(value FOOTER))
+-include $(DIRS)
 
-# Optional final makefile where you can specify additional targets
--include $(TOP)/final.mk
+INC := $(addprefix -I,$(INCDIRS))
+LIBDIR := $(addprefix -L,$(LIBDIRS))
+LIB := $(addprefix -l,$(LIBS))
 
-# This is just a convenience - to let you know when make has stopped
-# interpreting make files and started their execution.
-$(info Rules generated $(if $(BUILD_MODE),for "$(BUILD_MODE)" mode,)...)
+clean:
+	@-rm $(OFILES) 
+	@-rm $(DOFILES)
+
+distclean:
+	@rm -rf $(DEBUGDIRS)
+	@rm -rf $(RELEASEDIRS)
+
+echo:
+	@echo "dirs:" $(DIRS)
+	@echo "incdirs:" $(INCDIRS)
+	@echo "debugdirs:" $(DEBUGDIRS)
+	@echo "releasedirs:" $(RELEASEDIRS)
+	@echo "libdirs:" $(LIBDIRS)
+	@echo "libs:" $(LIBS) 
+	@echo "ofiles:" $(OFILES)
+	@echo "dofiles:" $(DOFILES)
+	@echo "DEBUGDIRS" $(DEBUGDIRS)
+	@echo "releasedirs" $(RELEASEDIRS)
+	@echo "ANIMALSRELEASEDIR" $(ANIMALSRELEASEDIR)
+	@echo "ANIMALSCFILES" $(ANIMALSCFILES)
+
+prebuild:
+	@mkdir -p $(DEBUGDIRS)
+	@mkdir -p $(RELEASEDIRS)
+
+$(RELEASETARGET) : $(OFILES)
+	$(TARGETRECEIPE)
+
+$(DEBUGTARGET): $(DOFILES)
+	$(TARGETRECEIPE)
+

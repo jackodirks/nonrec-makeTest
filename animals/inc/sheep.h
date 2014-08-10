@@ -1,1 +1,1 @@
-int sheep(void);
+int printSheep(void);

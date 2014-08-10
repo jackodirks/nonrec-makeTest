@@ -1,1 +1,1 @@
-int horse(void);
+int printHorse(void);
