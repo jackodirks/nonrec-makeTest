@@ -39,8 +39,8 @@ LIBDIR := $(addprefix -L,$(LIBDIRS))
 LIB := $(addprefix -l,$(LIBS))
 
 clean:
-	@-rm $(OFILES) 
-	@-rm $(DOFILES)
+	@rm -f $(OFILES) 
+	@rm -f $(DOFILES)
 
 distclean:
 	@rm -rf $(DEBUGDIRS)
